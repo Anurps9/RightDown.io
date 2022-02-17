@@ -12,10 +12,12 @@
   "author": "Anurag Sisodiya",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.26.0",
     "body-parser": "^1.19.1",
     "concurrently": "^7.0.0",
     "dotenv": "^14.3.0",
     "express": "^4.17.2",
-    "mongoose": "^6.1.8"
+    "mongoose": "^6.1.8",
+    "socket.io": "^4.4.1"
   }
 }

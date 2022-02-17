@@ -4,7 +4,33 @@ const path = require('path')
 const user = require('./routes/user')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const httpServer = createServer(app)
 require('dotenv').config()
+
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:3000"
+    }
+ })
+
+io.on('connection', (socket) => {
+    console.log('Socket connected');
+    socket.on('diconnect', () => {
+    })
+    socket.on('mouse-down', (tool, point) => {
+        console.log(tool, point);
+        io.emit('mouse-down', tool, point);
+    })
+    // socket.on('mouse-drag', () => {
+    //     io.emit('mouse-drag', {tool: tool, point: point});
+    // })
+    // socket.on('mouse-up', () => {
+    //     io.emit('mouse-up', {tool: tool, point: point});
+    // })
+})
 
 // main()
 // .then(() => {
@@ -28,6 +54,6 @@ app.get('/', (req, res) => {
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`);
 })
