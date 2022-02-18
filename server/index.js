@@ -20,16 +20,15 @@ io.on('connection', (socket) => {
     console.log('Socket connected');
     socket.on('diconnect', () => {
     })
-    socket.on('mouse-down', (tool, point) => {
-        console.log(tool, point);
-        io.emit('mouse-down', tool, point);
+    socket.on('mouse-down', (data) => {
+        socket.broadcast.emit('mouse-down', data);
     })
-    // socket.on('mouse-drag', () => {
-    //     io.emit('mouse-drag', {tool: tool, point: point});
-    // })
-    // socket.on('mouse-up', () => {
-    //     io.emit('mouse-up', {tool: tool, point: point});
-    // })
+    socket.on('mouse-drag', (data) => {
+        socket.broadcast.emit('mouse-drag', data);
+    })
+    socket.on('mouse-up', (data) => {
+        socket.broadcast.emit('mouse-up', data);
+    })
 })
 
 // main()
