@@ -75,6 +75,7 @@ export const usePaper = (tool, color) => {
         }
         paper.view.onMouseUp = (e) => {
             socket.emit('mouse-up', [e.point, tool, color])
+            // console.log(socket.room);
             switch (tool){
                 case 'pencil':{
                     path.simplify();

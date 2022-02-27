@@ -7,6 +7,8 @@ import { useSocket } from "../Service/socket.js";
 export default function Canvas(){
     const [tool, selectTool] = useState('pencil')
     const [color, selectColor] = useState('black')
+    const [inRoom, setInRoom] = useState(false)
+    const [room, setRoom] = useState('')
     const canvasRef = useRef(null)
     const socket = useContext(SocketContext)
     
@@ -40,13 +42,27 @@ export default function Canvas(){
             
             paper.view.draw();		
         }
-        socket.on('mouse-down', ([e, tool, color]) => {
-            
-        })
     }, [])
 
     useSocket()
     usePaper(tool, color)
+
+    const handleRoomChange = (e) => {
+        setRoom(e.target.value)
+    }
+    const handleRoomJoin = (e) => {
+        if(room.length < 3){
+            alert('Room ID must be 3 characters at least.')
+            return;
+        }
+        setInRoom(true)
+        socket.emit('join room', room)
+        setRoom('')
+    }
+    const handleRoomLeave = (e) => {
+        setInRoom(false)
+        socket.emit('leave room')
+    }
 
     const colors = ['red', 'green', 'black', 'white', 'yellow']
     const tools = ['pencil', 'rectangle', 'eraser', 'circle', 'pan']
@@ -63,6 +79,17 @@ export default function Canvas(){
                 colors.map((color) => (
                     <input key={color} onClick={(e) => {selectColor(e.target.name)}} name={color} type="button" value={color.toUpperCase()}/>
                 ))
+            }
+            {
+                !inRoom ?
+                <div>
+                    <input type="text" placeholder="Enter room ID" value={room} onChange={handleRoomChange}/>
+                    <input type="button" value="Join room" onClick={handleRoomJoin}/>
+                </div>
+                :
+                <div>
+                    <input type="button" value="Leave room" onClick={handleRoomLeave}/>
+                </div>
             }
             <canvas ref={canvasRef} id="paper-canvas" resize="true">
             </canvas>

@@ -14,20 +14,29 @@ const io = new Server(httpServer, {
     cors: {
         origin: "http://localhost:3000"
     }
- })
+})
 
 io.on('connection', (socket) => {
     console.log('Socket connected');
-    socket.on('diconnect', () => {
+    socket.on('disconnect', () => {
     })
+    socket.room = socket.id
     socket.on('mouse-down', (data) => {
-        socket.broadcast.emit('mouse-down', data);
+        if(socket.room != socket.id) socket.to(socket.room).emit('mouse-down', data);
     })
     socket.on('mouse-drag', (data) => {
-        socket.broadcast.emit('mouse-drag', data);
+        if(socket.room != socket.id) socket.to(socket.room).emit('mouse-drag', data);
     })
     socket.on('mouse-up', (data) => {
-        socket.broadcast.emit('mouse-up', data);
+        if(socket.room != socket.id) socket.to(socket.room).emit('mouse-up', data);
+    })
+    socket.on('join room', (data) => {
+        socket.join(data)
+        socket.room = data
+    })
+    socket.on('leave room', ()=>{
+        socket.leave(socket.room)
+        socket.room = socket.id
     })
 })
 
