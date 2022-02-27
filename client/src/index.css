@@ -5,7 +5,11 @@ body, html, #root{
   padding: 0;
 }
 
+body::-webkit-scrollbar{
+  display: none;
+}
+
 canvas{
-  height: 100%;
+  height: 100vh;
   width: 100%;
 }
